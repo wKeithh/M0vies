@@ -1,13 +1,13 @@
-import React from "react";
-import MapExample from "./MapExemple";
 
-function App() {
+import PageLayout from "./PageLayout";
+
+const App = () => {
+
   return (
     <div>
-      <h1>Exemple de la map</h1>
-      <MapExample />
+      <PageLayout />
     </div>
   );
-}
+};
 
 export default App;
