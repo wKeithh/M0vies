@@ -1,5 +1,6 @@
 import './App.css';
 import { Lecteur } from './Components/Lecteur';
+import { Chat } from './Components/Chat';
 import { JsonDataProvider } from './api';
 
 function App() {
@@ -7,7 +8,7 @@ function App() {
   return (
     <div>
       <JsonDataProvider>
-        <Lecteur />
+        <Chat></Chat>
       </JsonDataProvider>
     </div>
   );
