@@ -1,39 +1,81 @@
-import { Card, CardContent } from '@mui/material';
+import React, { useEffect, useState, useRef } from "react";
+import { Button, Card, CardContent, TextField, Typography } from "@mui/material";
 
 export function Chat() {
+  const URL = "wss://iai3-react-34db9d7c5920.herokuapp.com";
+  const [messages, setMessages] = useState([]); 
+  const [connected, setConnected] = useState(false);
+  const [inputMessage, setInputMessage] = React.useState('');
+  const [inputName, setInputName] = React.useState('');
+  const ws = useRef(null);
 
-    const URL = "wss://iai3-react-34db9d7c5920.herokuapp.com";
-    const ws = new WebSocket(URL);
+  useEffect(() => {
+    ws.current = new WebSocket(URL);
 
-    ws.onopen = () => {
-        console.log("connected");
-        this.setState({
-            connected: true
-        });
+    ws.current.onopen = () => {
+      console.log("Connected to WebSocket");
+      setConnected(true);
     };
 
-    ws.onmessage = evt => {
-        const messages = JSON.parse(evt.data);
-        messages.map(message);
+    ws.current.onmessage = (evt) => {
+      const newMessages = JSON.parse(evt.data);
+      setMessages((prevMessages) =>
+        [...prevMessages, ...newMessages].sort((a, b) => b.when - a.when)
+      );
     };
 
-    ws.onclose = () => {
-        console.log("disconnected, reconnect.");
-        this.setState({
-            connected: false,
-            ws: new WebSocket(URL)
-        });
+    ws.current.onclose = () => {
+      console.log("WebSocket disconnected, attempting to reconnect...");
+      setConnected(false);
+      setTimeout(() => {
+        ws.current = new WebSocket(URL); // Reconnecter après un délai
+      }, 1000);
     };
 
-    return(
-        <div>
-            <Card>
-                <CardContent>
-                    <h3>Nom</h3>
-                    <p>messages</p>
-                    <p>date</p>
-                </CardContent>
+    return () => {
+      // Nettoyage lors du démontage du composant
+      if (ws.current) {
+        ws.current.close();
+      }
+    };
+  }, []);
+
+  const sendMessage = () => {
+    if (connected) {
+      const messageData = {
+        name: inputName, 
+        message: inputMessage,
+        when: Date.now(), 
+      };
+      ws.current.send(JSON.stringify(messageData));
+    }
+  };
+
+  if (!connected) return <div>Chargement du Chat...</div>;
+
+  return (
+    <div>
+        {messages.map((message, index) => (
+            <Card key={index}>
+            <CardContent>
+                <h3>{message.name}</h3>
+                <p>{message.message}</p>
+                <Typography variant="overline">{new Date(message.when).toDateString()}</Typography>
+            </CardContent>
             </Card>
+        ))}
+        <div>
+            <TextField variant="outlined" label="Name" value={inputName}
+            onChange={(e) =>{setInputName(e.target.value)}} ></TextField>
+
+            <TextField variant="outlined" label="Messages" value={inputMessage}
+            onChange={(e) =>{setInputMessage(e.target.value)}} ></TextField>
+
+            <Button 
+                variant="outlined"
+                onClick={sendMessage}
+            >send</Button>
         </div>
-    )
+    </div>
+  );
 }
