@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, Card, CardContent, TextField, Typography } from "@mui/material";
+import { Button, Card, CardContent, Checkbox, Link, TextField, Typography } from "@mui/material";
 
 export function Chat() {
   const URL = "wss://iai3-react-34db9d7c5920.herokuapp.com";
@@ -7,6 +7,7 @@ export function Chat() {
   const [connected, setConnected] = useState(false);
   const [inputMessage, setInputMessage] = React.useState('');
   const [inputName, setInputName] = React.useState('');
+  const [checkbox, setCheckbox] = React.useState(false);
   const ws = useRef(null);
 
   useEffect(() => {
@@ -40,14 +41,28 @@ export function Chat() {
     };
   }, []);
 
+  const handleChange = (event) => {
+    setCheckbox(event.target.checked);
+  };
+
   const sendMessage = () => {
     if (connected) {
-      const messageData = {
-        name: inputName, 
-        message: inputMessage,
-        when: Date.now(), 
-      };
-      ws.current.send(JSON.stringify(messageData));
+      if (checkbox) {
+        const messageData = {
+          name: inputName, 
+          message: inputMessage,
+          when: Date.now(),
+          moment: 0,
+        };
+        ws.current.send(JSON.stringify(messageData));
+      } else {
+        const messageData = {
+          name: inputName, 
+          message: inputMessage,
+          when: Date.now(), 
+        };
+        ws.current.send(JSON.stringify(messageData));
+      }
     }
   };
 
@@ -56,14 +71,14 @@ export function Chat() {
   return (
     <div>
         <div>
-            {messages.map((message, index) => (
+            {messages.map( (message, index) =>(
                 <Card key={index}>
                 <CardContent>
                     <h3>{message.name}</h3>
-                    <p>{message.message}</p>
+                    <p>{message.message} <Link underline="hover" onClick={() => {console.log("click")}}>{message.moment}</Link></p>
                     <Typography variant="overline">{new Date(message.when).toDateString()}</Typography>
                 </CardContent>
-                </Card>
+                </Card>          
             ))}
         </div>
         <TextField variant="outlined" label="Name" value={inputName}
@@ -71,6 +86,12 @@ export function Chat() {
 
         <TextField variant="outlined" label="Messages" value={inputMessage}
         onChange={(e) =>{setInputMessage(e.target.value)}} ></TextField>
+
+        <Checkbox 
+          label="moment" 
+          checked={checkbox}
+          onChange={handleChange}
+          >Insert Moment</Checkbox>
 
         <Button 
             variant="outlined"
