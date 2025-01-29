@@ -55,27 +55,27 @@ export function Chat() {
 
   return (
     <div>
-        {messages.map((message, index) => (
-            <Card key={index}>
-            <CardContent>
-                <h3>{message.name}</h3>
-                <p>{message.message}</p>
-                <Typography variant="overline">{new Date(message.when).toDateString()}</Typography>
-            </CardContent>
-            </Card>
-        ))}
         <div>
-            <TextField variant="outlined" label="Name" value={inputName}
-            onChange={(e) =>{setInputName(e.target.value)}} ></TextField>
-
-            <TextField variant="outlined" label="Messages" value={inputMessage}
-            onChange={(e) =>{setInputMessage(e.target.value)}} ></TextField>
-
-            <Button 
-                variant="outlined"
-                onClick={sendMessage}
-            >send</Button>
+            {messages.map((message, index) => (
+                <Card key={index}>
+                <CardContent>
+                    <h3>{message.name}</h3>
+                    <p>{message.message}</p>
+                    <Typography variant="overline">{new Date(message.when).toDateString()}</Typography>
+                </CardContent>
+                </Card>
+            ))}
         </div>
+        <TextField variant="outlined" label="Name" value={inputName}
+        onChange={(e) =>{setInputName(e.target.value)}} ></TextField>
+
+        <TextField variant="outlined" label="Messages" value={inputMessage}
+        onChange={(e) =>{setInputMessage(e.target.value)}} ></TextField>
+
+        <Button 
+            variant="outlined"
+            onClick={sendMessage}
+        >send</Button>
     </div>
   );
 }
