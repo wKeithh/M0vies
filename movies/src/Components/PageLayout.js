@@ -1,6 +1,7 @@
 import MapExample from "./MapExemple";
 import WikiContent from "./WikiContent";
 import { Lecteur } from "./Lecteur";
+import { Chat } from "./Chat";
 
 const PageLayout = () => {
 
@@ -14,7 +15,7 @@ const PageLayout = () => {
       {/* Chat */}
       <div style={styles.chat}>
         <h2>Chat</h2>
-        {/* Contenu du chat */}
+        <Chat/>
       </div>
 
       {/* Contenu Wikipédia */}
@@ -63,7 +64,7 @@ const styles = {
   },
   map: {
     gridColumn: "2 / 3", // Dans la colonne de droite
-    gridRow: "2 / 4",
+    gridRow: "3 / 4",
     height: "200px", // Hauteur fixe pour la carte
     backgroundColor: "#ccc",
   },
