@@ -70,33 +70,49 @@ export function Chat() {
 
   return (
     <div>
-        <div>
-            {messages.map( (message, index) =>(
-                <Card key={index}>
-                <CardContent>
-                    <h3>{message.name}</h3>
-                    <p>{message.message} <Link underline="hover" onClick={() => {console.log("click")}}>{message.moment}</Link></p>
-                    <Typography variant="overline">{new Date(message.when).toDateString()}</Typography>
-                </CardContent>
-                </Card>
-            ))}
+      <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+        {/* Conteneur des messages */}
+        <div style={{ flex: 1, overflowY: "auto", padding: "10px" }}>
+          {console.log(messages)}
+          {messages.map((message, index) => (
+            <Card key={index} style={{ marginBottom: "10px" }}>
+              <CardContent>
+                <h3>{message.name}</h3>
+                <p>{message.message} {/*<Link underline="hover" onClick={() => console.log("click")}>{message.moment}</Link>*/}</p>
+                <Typography variant="overline">{new Date(message.when).toDateString()}</Typography>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-        <TextField variant="outlined" label="Name" value={inputName}
-        onChange={(e) =>{setInputName(e.target.value)}} ></TextField>
 
-        <TextField variant="outlined" label="Messages" value={inputMessage}
-        onChange={(e) =>{setInputMessage(e.target.value)}} ></TextField>
-
-        <Checkbox
-          label="moment"
-          checked={checkbox}
-          onChange={handleChange}
-          >Insert Moment</Checkbox>
-
-        <Button
+        {/* Formulaire en bas */}
+        <div style={{
+          padding: "10px",
+          borderTop: "1px solid #ddd",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          background: "white"
+        }}>
+          <TextField
             variant="outlined"
-            onClick={sendMessage}
-        >send</Button>
+            label="Name"
+            value={inputName}
+            onChange={(e) => setInputName(e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            label="Message"
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+          />
+          <Checkbox
+            checked={checkbox}
+            onChange={handleChange}
+          />
+          <Button variant="outlined" onClick={sendMessage}>Send</Button>
+        </div>
+      </div>
     </div>
   );
 }

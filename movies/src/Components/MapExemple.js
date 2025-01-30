@@ -7,8 +7,7 @@ import L from "leaflet";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
-import { useVideo } from '../Features/filmSlice';
-import { useJsonData } from '../Features/api';
+import { useJsonData } from '../features/api';
 
 const defaultIcon = L.icon({
   iconUrl: markerIcon,

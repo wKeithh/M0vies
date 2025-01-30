@@ -2,6 +2,7 @@ import MapExample from "./MapExemple";
 import WikiContent from "./WikiContent";
 import { Lecteur } from "./Lecteur";
 import { Chat } from "./Chat";
+import { TimestampDisplay } from './TimestampDisplay';
 
 const PageLayout = () => {
 
@@ -20,6 +21,7 @@ const PageLayout = () => {
 
       {/* Contenu Wikipédia */}
       <div style={styles.wikiContent}>
+        <TimestampDisplay />
         <WikiContent/>
       </div>
 
@@ -51,10 +53,9 @@ const styles = {
   },
   chat: {
     gridColumn: "2 / 3", // Occupe la deuxième colonne
-    gridRow: "1 / 3", // S'étend sur deux lignes (à droite)
+    gridRow: "1 / 2", // S'étend sur deux lignes (à droite)
     backgroundColor: "#f1f1f1",
     padding: "10px",
-    overflowY: "auto",
   },
   wikiContent: {
     gridColumn: "1 / 2",
@@ -64,7 +65,7 @@ const styles = {
   },
   map: {
     gridColumn: "2 / 3", // Dans la colonne de droite
-    gridRow: "3 / 4",
+    gridRow: "2 / 3",
     height: "200px", // Hauteur fixe pour la carte
     backgroundColor: "#ccc",
   },

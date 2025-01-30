@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from '@mui/material';
-import { useJsonData } from '../Features/api';
+import { useJsonData } from '../features/api';
 
 
 export function WikiContent() {
