@@ -56,6 +56,7 @@ const styles = {
     gridRow: "1 / 2", // S'étend sur deux lignes (à droite)
     backgroundColor: "#f1f1f1",
     padding: "10px",
+    overflowY: "auto",
   },
   wikiContent: {
     gridColumn: "1 / 2",

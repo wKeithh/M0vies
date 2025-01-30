@@ -29,6 +29,7 @@ export function Chat() {
       console.log("WebSocket disconnected, attempting to reconnect...");
       setConnected(false);
       setTimeout(() => {
+        console.log("Recharge")
         ws.current = new WebSocket(URL); // Reconnecter après un délai
       }, 1000);
     };
