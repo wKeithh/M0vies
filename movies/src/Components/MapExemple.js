@@ -7,6 +7,9 @@ import L from "leaflet";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
+import { useVideo } from '../Features/filmSlice';
+import { useJsonData } from '../Features/api';
+
 const defaultIcon = L.icon({
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
@@ -17,17 +20,25 @@ const defaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = defaultIcon;
 
-const MapExample = ({ waypoints }) => {
+export function MapExample() {
+
+  const { jsonData, loading, error } = useJsonData();
+  if (loading) return <div>Chargement...</div>;
+  if (error) return <div>Erreur : {error}</div>;
+
+
+
   const defaultPosition = [51.505, -0.09]; // Position par défaut si aucun waypoint
 
   return (
+
     <div style={{ height: "100vh", width: "100%" }}>
       <MapContainer center={defaultPosition} zoom={5} style={{ height: "100%", width: "100%" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {waypoints.map((waypoint, index) => (
+        {jsonData.Waypoints.map((waypoint, index) => (
           <Marker key={index} position={[parseFloat(waypoint.lat), parseFloat(waypoint.lng)]}>
             <Popup>
               <strong>{waypoint.label}</strong>

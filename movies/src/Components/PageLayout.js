@@ -1,52 +1,14 @@
-import React, { useState, useEffect } from "react";
 import MapExample from "./MapExemple";
-import axios from "axios";
+import WikiContent from "./WikiContent";
+import { Lecteur } from "./Lecteur";
+
 const PageLayout = () => {
-     const [film, setFilm] = useState([]);
-      const [chapters, setChapters] = useState([]);
-      const [waypoints, setWaypoints] = useState([]);
-      const [keywords, setKeywords] = useState([]);
-
-      useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await axios.get("https://iai3-react-34db9d7c5920.herokuapp.com/backend");
-            const data = response.data;
-            // Extraire Film
-            if (data.Film){
-              setFilm(data.Film);
-            }
-
-            // Extraire les chapitres
-            if (data.Chapters){
-              setChapters(data.Chapters);
-            }
-
-            // Extraire les waypoints
-            if (data.Waypoints) {
-              setWaypoints(data.Waypoints);
-            }
-
-            // Extraire les Keywords
-            if (data.Keywords){
-              setKeywords(data.Keywords);
-            }
-
-          } catch (error) {
-            console.error("Erreur lors de la récupération des données :", error);
-          }
-        };
-
-        fetchData();
-      }, []);
-
 
   return (
     <div style={styles.container}>
       {/* Lecteur vidéo */}
       <div style={styles.videoPlayer}>
-        <h2>Lecteur Vidéo</h2>
-        {/* Espace réservé pour le lecteur vidéo */}
+        <Lecteur/>
       </div>
 
       {/* Chat */}
@@ -57,13 +19,12 @@ const PageLayout = () => {
 
       {/* Contenu Wikipédia */}
       <div style={styles.wikiContent}>
-        <h2>Contenu Wikipédia</h2>
-        <p>Contenu chargé depuis Wikipédia sera affiché ici.</p>
+        <WikiContent/>
       </div>
 
       {/* Carte */}
       <div style={styles.map}>
-        <MapExample waypoints={waypoints} />
+        <MapExample/>
       </div>
     </div>
   );
@@ -99,7 +60,6 @@ const styles = {
     gridRow: "2 / 3", // En dessous de la vidéo
     backgroundColor: "#e8e8e8",
     padding: "10px",
-    overflowY: "auto",
   },
   map: {
     gridColumn: "2 / 3", // Dans la colonne de droite

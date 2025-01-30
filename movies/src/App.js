@@ -1,13 +1,18 @@
+import './App.css';
+import PageLayout from './Components/PageLayout';
+import { Backend } from './Features/api';
+import { VideoProvider } from './Features/filmSlice';
 
-import PageLayout from "./PageLayout";
-
-const App = () => {
-
+function App() {
   return (
     <div>
-      <PageLayout />
+      <VideoProvider>
+        <Backend>
+          <PageLayout />
+        </Backend>
+      </VideoProvider>
     </div>
   );
-};
+}
 
 export default App;
