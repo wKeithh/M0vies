@@ -1,8 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from '@mui/material';
 import { Player, BigPlayButton } from 'video-react';
 import { useJsonData } from '../features/api';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { setTimestamp } from '../features/filmSlice'; // Assure-toi du bon chemin
 import "../../node_modules/video-react/dist/video-react.css";
 
@@ -28,6 +28,14 @@ export function Lecteur() {
             dispatch(setTimestamp(videoRef.current.getState().player.currentTime));
         }
     };
+
+    const timestamp = useSelector((state) => state.film.timestamp);
+
+    useEffect(() => {
+        if (videoRef.current && timestamp > 0) {
+            videoRef.current.seek(timestamp); // Déplace la vidéo au timestamp cliqué
+        }
+    }, [timestamp]);
 
     if (loading) return <div>Chargement...</div>;
     if (error) return <div>Erreur : {error}</div>;

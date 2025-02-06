@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import markerBlue from "leaflet/dist/images/marker-icon.png";
 import markerRed from "leaflet/dist/images/marker-icon-red.png";
 import markerGray from "leaflet/dist/images/marker-icon-grey.png";
+import { setTimestamp } from '../features/filmSlice'; // Assure-toi du bon chemin
 
 const icons = {
   gray: L.icon({ iconUrl: markerGray, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] }),
@@ -97,7 +98,10 @@ export function MapExample() {
               position={[waypoint.lat, waypoint.lng]}
               icon={icon}
               eventHandlers={{
-                click: () => dispatch({ type: "UPDATE_TIMESTAMP", payload: waypoint.timestamp }),
+                click: () => {
+                  dispatch(setTimestamp(waypoint.timestamp));
+                  console.log("Waypoint cliqué : ",waypoint.timestamp, "seconde(s)")
+                }
               }}
             />
           );
