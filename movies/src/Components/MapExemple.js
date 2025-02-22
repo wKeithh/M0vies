@@ -5,13 +5,11 @@ import L from "leaflet";
 import { useJsonData } from "../features/api";
 import { useSelector, useDispatch } from "react-redux";
 import markerBlue from "leaflet/dist/images/marker-icon.png";
-import markerRed from "leaflet/dist/images/marker-icon-red.png";
-import markerGray from "leaflet/dist/images/marker-icon-grey.png";
 import { setTimestamp } from '../features/filmSlice'; // Assure-toi du bon chemin
 
 const icons = {
-  gray: L.icon({ iconUrl: markerGray, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] }),
-  red: L.icon({ iconUrl: markerRed, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] }),
+  gray: L.icon({ iconUrl: "/marker-icon-grey.png", iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] }),
+  red: L.icon({ iconUrl: "/marker-icon-red.png", iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] }),
   blue: L.icon({ iconUrl: markerBlue, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] }),
 };
 

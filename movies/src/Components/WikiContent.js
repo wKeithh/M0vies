@@ -23,8 +23,6 @@ export function WikiContent() {
             <h2>Wiki</h2>
             {lastKeyword ? (
                 <div key={lastKeyword.pos}>
-                    {/* Affiche un bouton pour chaque mot-clé trouvé */}
-                    Position {lastKeyword.pos} secondes :
                     {lastKeyword.data.map((item, index) => (
                         <Button
                             key={index}

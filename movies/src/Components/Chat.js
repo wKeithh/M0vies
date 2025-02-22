@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Button, Card, CardContent, Checkbox, Link, TextField, Typography } from "@mui/material";
+import { useSelector, useDispatch } from 'react-redux';
+import { setTimestamp } from "../features/filmSlice";
 
 export function Chat() {
   const URL = "wss://iai3-react-34db9d7c5920.herokuapp.com";
@@ -10,32 +12,53 @@ export function Chat() {
   const [checkbox, setCheckbox] = React.useState(false);
   const ws = useRef(null);
 
+  const timestamp = useSelector((state) => state.film.timestamp); // Récupération du timestamp
+  const dispatch = useDispatch()
+
+  const formatTimestamp = (seconds) => {
+    if(seconds){
+
+      seconds = Math.floor(seconds);
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = seconds % 60;
+      return [h, m, s].map(unit => String(unit).padStart(2, '0')).join(':');
+    }
+    else{
+      return ""
+    }
+
+  };
+
   useEffect(() => {
-    ws.current = new WebSocket(URL);
+    const connectWebSocket = () => {
+      ws.current = new WebSocket(URL);
 
-    ws.current.onopen = () => {
-      console.log("Connected to WebSocket");
-      setConnected(true);
+      ws.current.onopen = () => {
+        console.log("Connected to WebSocket");
+        setConnected(true);
+      };
+
+      ws.current.onmessage = (evt) => {
+        const newMessages = JSON.parse(evt.data);
+        setMessages((prevMessages) =>
+          [...prevMessages, ...newMessages].sort((a, b) => b.when - a.when)
+        );
+      };
+
+      ws.current.onclose = () => {
+        console.log("WebSocket disconnected, attempting to reconnect...");
+        setConnected(false);
+        console.log("Reconnect")
+        setTimeout(() => {
+          connectWebSocket();
+        }, 1000);
+      };
     };
 
-    ws.current.onmessage = (evt) => {
-      const newMessages = JSON.parse(evt.data);
-      setMessages((prevMessages) =>
-        [...prevMessages, ...newMessages].sort((a, b) => b.when - a.when)
-      );
-    };
-
-    ws.current.onclose = () => {
-      console.log("WebSocket disconnected, attempting to reconnect...");
-      setConnected(false);
-      setTimeout(() => {
-        console.log("Recharge")
-        ws.current = new WebSocket(URL); // Reconnecter après un délai
-      }, 1000);
-    };
+    connectWebSocket(); // Démarrer la connexion initiale
 
     return () => {
-      // Nettoyage lors du démontage du composant
       if (ws.current) {
         ws.current.close();
       }
@@ -53,7 +76,7 @@ export function Chat() {
           name: inputName,
           message: inputMessage,
           when: Date.now(),
-          moment: 0,
+          moment: Math.floor(timestamp),
         };
         ws.current.send(JSON.stringify(messageData));
       } else {
@@ -74,12 +97,20 @@ export function Chat() {
       <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
         {/* Conteneur des messages */}
         <div style={{ flex: 1, overflowY: "auto", padding: "10px" }}>
-          {console.log(messages)}
           {messages.map((message, index) => (
             <Card key={index} style={{ marginBottom: "10px" }}>
               <CardContent>
                 <h3>{message.name}</h3>
-                <p>{message.message} {/*<Link underline="hover" onClick={() => console.log("click")}>{message.moment}</Link>*/}</p>
+                <p>{message.message} {
+                  <Link
+                    underline="hover"
+                    onClick={() => {
+                      dispatch(setTimestamp(message.moment));
+                      console.log(message.moment)}}
+                  >
+                    {formatTimestamp(message.moment)}
+                  </Link>}
+                </p>
                 <Typography variant="overline">{new Date(message.when).toDateString()}</Typography>
               </CardContent>
             </Card>

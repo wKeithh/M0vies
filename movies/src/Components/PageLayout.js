@@ -2,7 +2,6 @@ import MapExample from "./MapExemple";
 import WikiContent from "./WikiContent";
 import { Lecteur } from "./Lecteur";
 import { Chat } from "./Chat";
-import { TimestampDisplay } from './TimestampDisplay';
 
 const PageLayout = () => {
 
@@ -21,7 +20,6 @@ const PageLayout = () => {
 
       {/* Contenu Wikipédia */}
       <div style={styles.wikiContent}>
-        <TimestampDisplay />
         <WikiContent/>
       </div>
 
@@ -29,6 +27,10 @@ const PageLayout = () => {
       <div style={styles.map}>
         <MapExample/>
       </div>
+
+      <footer>
+      © Keith Moser - Mathis Leroux
+      </footer>
     </div>
   );
 };
@@ -59,14 +61,14 @@ const styles = {
     overflowY: "auto",
   },
   wikiContent: {
-    gridColumn: "1 / 2",
+    gridColumn: "1 / 3",
     gridRow: "2 / 3", // En dessous de la vidéo
     backgroundColor: "#e8e8e8",
     padding: "10px",
   },
   map: {
-    gridColumn: "2 / 3", // Dans la colonne de droite
-    gridRow: "2 / 3",
+    gridColumn: "1 / 3", // Dans la colonne de droite
+    gridRow: "3 / 3",
     height: "200px", // Hauteur fixe pour la carte
     backgroundColor: "#ccc",
   },

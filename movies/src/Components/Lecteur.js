@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Button } from '@mui/material';
 import { Player, BigPlayButton } from 'video-react';
 import { useJsonData } from '../features/api';
-import { useDispatch,useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { setTimestamp } from '../features/filmSlice'; // Assure-toi du bon chemin
 import "../../node_modules/video-react/dist/video-react.css";
 
@@ -11,9 +11,12 @@ export function Lecteur() {
     const videoRef = useRef(null); // Permet d'accéder au lecteur vidéo
 
     const { jsonData, loading, error } = useJsonData();
-    const videoSrc = "/film.mp4";
+    const videoSrc = "/Route_66_-_an_American_badDream_512kb.mp4";
 
-    const [activeButtonId, setActiveButtonId] = useState(null);
+    const [activeButtonId, setActiveButtonId] = useState(0);
+
+    const lastTimestampRef = useRef(null);
+
 
     const handleButtonClick = (id) => {
         setActiveButtonId(id);
@@ -24,19 +27,41 @@ export function Lecteur() {
 
     // Fonction qui met à jour le timestamp dans Redux
     const updateTimestamp = () => {
-        if (videoRef.current) {
-            dispatch(setTimestamp(videoRef.current.getState().player.currentTime));
+        if (!videoRef.current) return;
+
+        const currentTime = Math.floor(videoRef.current.getState().player.currentTime);
+        // Éviter les mises à jour inutiles
+        if (lastTimestampRef.current !== currentTime) {
+            lastTimestampRef.current = currentTime;
+            dispatch(setTimestamp(currentTime));
+        }
+
+        // Trouver le chapitre correspondant
+        const currentChapter = jsonData.Chapters.find((chapter, idx) => {
+            const nextChapter = jsonData.Chapters[idx + 1];
+            return nextChapter ? chapter.pos <= currentTime && nextChapter.pos > currentTime : chapter.pos <= currentTime;
+        });
+
+        // Mettre à jour l'ID du bouton actif si nécessaire
+        if (currentChapter && activeButtonId !== currentChapter.pos) {
+            setActiveButtonId(currentChapter.pos);
         }
     };
 
     const timestamp = useSelector((state) => state.film.timestamp);
+    const lastSeekRef = useRef(null);
 
     useEffect(() => {
         if (videoRef.current && timestamp > 0) {
-            videoRef.current.seek(timestamp); // Déplace la vidéo au timestamp cliqué
+            const player = videoRef.current.getState().player;
+
+            // Évite les appels inutiles si la position est déjà correcte
+            if (lastSeekRef.current !== timestamp && Math.abs(player.currentTime - timestamp) > 0.5) {
+                lastSeekRef.current = timestamp;
+                videoRef.current.seek(timestamp);
+            }
         }
     }, [timestamp]);
-
     if (loading) return <div>Chargement...</div>;
     if (error) return <div>Erreur : {error}</div>;
 
